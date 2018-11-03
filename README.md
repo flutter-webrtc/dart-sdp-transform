@@ -1,2 +1,4 @@
 # dart-sdp-transform
-A simple parser/writer for the Session Description Protocol
+Dart version of the [sdp-transform](https://github.com/medooze/sdp-transform) JavaScript library.
+
+dart-sdp-transform is a simple parser and writer of SDP. Defines internal grammar based on RFC4566 - SDP, RFC5245 - ICE, and many more.
