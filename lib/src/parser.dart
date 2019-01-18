@@ -67,7 +67,6 @@ parse(sdp) {
           continue;
         }
         if (RegExp(obj['reg']).hasMatch(content)) {
-          //print('reg = ' + obj['reg'] + ', content = ' + content);
           return parseReg(obj, location, content);
         }
       }
@@ -79,7 +78,7 @@ parse(sdp) {
 }
 
 paramReducer(acc, expr) {
-  var s = expr.split(new RegExp('/=(.+)/'), 2);
+  var s = expr.split(new RegExp(r'/=(.+)/'), 2);
   if (s.length == 2) {
     acc[s[0]] = toIntIfInt(s[1]);
   } else if (s.length == 1 && expr.length > 1) {
@@ -89,7 +88,7 @@ paramReducer(acc, expr) {
 }
 
 parseParams(str) {
-  return str.split(new RegExp('/;\s?/')).reduce(paramReducer, {});
+  return str.split(new RegExp(r'/;\s?/')).reduce(paramReducer, {});
 }
 
 parsePayloads(str) {
