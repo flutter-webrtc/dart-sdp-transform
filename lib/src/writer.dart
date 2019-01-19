@@ -5,24 +5,23 @@ var formatRegExp = new RegExp(r'%d|%v|%s');
 format(formatStr, args) {
   var i = 0;
   return formatStr.replaceAllMapped(
-            formatRegExp,
-            (Match m) => args[i++].toString());
+      formatRegExp, (Match m) => args[i++].toString());
 }
 
 makeLine(type, obj, location) {
   var str;
 
-  if(obj['format'] != null){
+  if (obj['format'] != null) {
     var format = obj['format'];
-    if(format is Function){
+    if (format is Function) {
       str = format(obj['push'] != null ? location : location[obj['name']]);
-    }else{
+    } else {
       str = obj['format'];
     }
-  }else{
-    try{
+  } else {
+    try {
       str = location[obj['name']];
-    }catch(e){
+    } catch (e) {
       print('e = ' + e.toString());
     }
   }

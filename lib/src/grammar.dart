@@ -381,7 +381,7 @@ var grammar = {
               '\$'),
       'names': ['dir1', 'list1', 'dir2', 'list2'],
       'format': (o) {
-        return 'simulcast:%s %s' + (o['dir2'] != null ?' %s %s' : '');
+        return 'simulcast:%s %s' + (o['dir2'] != null ? ' %s %s' : '');
       }
     },
     {
