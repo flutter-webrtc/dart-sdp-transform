@@ -44,7 +44,7 @@ parseReg(obj, location, content) {
 
 parse(sdp) {
   var session = {};
-  Map<dynamic, dynamic> media = new Map();
+  var medias = [];
 
   var location =
       session; // points at where properties go under (one of the above)
@@ -55,11 +55,12 @@ parse(sdp) {
       var type = l[0];
       var content = l.substring(2);
       if (type == 'm') {
+        Map<dynamic, dynamic> media = new Map();
         media['rtp'] = [];
         media['fmtp'] = [];
         location = media; // point at latest media line
+        medias.add(media);
       }
-
       for (var j = 0; j < grammar[type].length; j += 1) {
         var obj = grammar[type][j];
         if (obj['reg'] == null) {
@@ -72,8 +73,7 @@ parse(sdp) {
       }
     }
   });
-
-  session['media'] = media; // link it up
+  session['media'] = medias; // link it up
   return session;
 }
 
@@ -125,7 +125,6 @@ parseSimulcastStreamList(str) {
         scid = toIntIfInt(format.substring(1, format.length));
         paused = true;
       }
-
       return {scid: scid, paused: paused};
     });
   });

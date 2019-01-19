@@ -1,68 +1,96 @@
 import 'dart:core';
 
 var grammar = {
-  'v': [{
-    'name': 'version',
-    'reg': r'^\d$'
-  }],
-  'o': [{
-    // o=- 20518 0 IN IP4 203.0.113.1
-    // NB: sessionId will be a String in most cases because it is huge
-    'name': 'origin',
-    'reg': r'^(\S*) (\d*) (\d*) (\S*) IP(\d) (\S*)',
-    'names': ['username', 'sessionId', 'sessionVersion', 'netType', 'ipVer', 'address'],
-    'format': '%s %s %d %s IP%d %s'
-  }],
+  'v': [
+    {'name': 'version', 'reg': r'^\d$'}
+  ],
+  'o': [
+    {
+      // o=- 20518 0 IN IP4 203.0.113.1
+      // NB: sessionId will be a String in most cases because it is huge
+      'name': 'origin',
+      'reg': r'^(\S*) (\d*) (\d*) (\S*) IP(\d) (\S*)',
+      'names': [
+        'username',
+        'sessionId',
+        'sessionVersion',
+        'netType',
+        'ipVer',
+        'address'
+      ],
+      'format': '%s %s %d %s IP%d %s'
+    }
+  ],
   // default parsing of these only (though some of these feel outdated)
-  's': [{ 'name': 'name' }],
-  'i': [{ 'name': 'description' }],
-  'u': [{ 'name': 'uri' }],
-  'e': [{ 'name': 'email' }],
-  'p': [{ 'name': 'phone' }],
-  'z': [{ 'name': 'timezones' }], // TODO: this one can actually be parsed properly...
-  'r': [{ 'name': 'repeats' }],   // TODO: this one can also be parsed properly
+  's': [
+    {'name': 'name'}
+  ],
+  'i': [
+    {'name': 'description'}
+  ],
+  'u': [
+    {'name': 'uri'}
+  ],
+  'e': [
+    {'name': 'email'}
+  ],
+  'p': [
+    {'name': 'phone'}
+  ],
+  'z': [
+    {'name': 'timezones'}
+  ], // TODO: this one can actually be parsed properly...
+  'r': [
+    {'name': 'repeats'}
+  ], // TODO: this one can also be parsed properly
   // k: [{}], // outdated thing ignored
-  't': [{
-    // t=0 0
-    'name': 'timing',
-    'reg': r'^(\d*) (\d*)',
-    'names': ['start', 'stop'],
-    'format': '%d %d'
-  }],
-  'c': [{
-    // c=IN IP4 10.47.197.26
-    'name': 'connection',
-    'reg': r'^IN IP(\d) (\S*)',
-    'names': ['version', 'ip'],
-    'format': 'IN IP%d %s'
-  }],
-  'b': [{
-    // b=AS:4000
-    'push': 'bandwidth',
-    'reg': r'^(TIAS|AS|CT|RR|RS):(\d*)',
-    'names': ['type', 'limit'],
-    'format': '%s:%s'
-  }],
-  'm': [{
-    // m=video 51744 RTP/AVP 126 97 98 34 31
-    // NB: special - pushes to session
-    // TODO: rtp/fmtp should be filtered by the payloads found here?
-    'reg': r'^(\w*) (\d*) ([\w/]*)(?: (.*))?',
-    'names': ['type', 'port', 'protocol', 'payloads'],
-    'format': '%s %d %s %s'
-  }],
+  't': [
+    {
+      // t=0 0
+      'name': 'timing',
+      'reg': r'^(\d*) (\d*)',
+      'names': ['start', 'stop'],
+      'format': '%d %d'
+    }
+  ],
+  'c': [
+    {
+      // c=IN IP4 10.47.197.26
+      'name': 'connection',
+      'reg': r'^IN IP(\d) (\S*)',
+      'names': ['version', 'ip'],
+      'format': 'IN IP%d %s'
+    }
+  ],
+  'b': [
+    {
+      // b=AS:4000
+      'push': 'bandwidth',
+      'reg': r'^(TIAS|AS|CT|RR|RS):(\d*)',
+      'names': ['type', 'limit'],
+      'format': '%s:%s'
+    }
+  ],
+  'm': [
+    {
+      // m=video 51744 RTP/AVP 126 97 98 34 31
+      // NB: special - pushes to session
+      // TODO: rtp/fmtp should be filtered by the payloads found here?
+      'reg': r'^(\w*) (\d*) ([\w/]*)(?: (.*))?',
+      'names': ['type', 'port', 'protocol', 'payloads'],
+      'format': '%s %d %s %s'
+    }
+  ],
   'a': [
     {
       // a=rtpmap:110 opus/48000/2
       'push': 'rtp',
       'reg': r'^rtpmap:(\d*) ([\w\-.]*)(?:\s*\/(\d*)(?:\s*\/(\S*))?)?',
       'names': ['payload', 'codec', 'rate', 'encoding'],
-      'format':  (o) {
-        return (o.encoding)
-          ? 'rtpmap:%d %s/%s/%s'
-          : o.rate
-            ? 'rtpmap:%d %s/%s'
-            : 'rtpmap:%d %s';
+      'format': (o) {
+        return (o['encoding'] != null)
+            ? 'rtpmap:%d %s/%s/%s'
+            : (o['rate'] != null) ? 'rtpmap:%d %s/%s' : 'rtpmap:%d %s';
       }
     },
     {
@@ -84,10 +112,8 @@ var grammar = {
       'name': 'rtcp',
       'reg': r'^rtcp:(\d*)(?: (\S*) IP(\d) (\S*))?',
       'names': ['port', 'netType', 'ipVer', 'address'],
-      'format':  (o) {
-        return (o.address != null)
-          ? 'rtcp:%d %s IP%d %s'
-          : 'rtcp:%d';
+      'format': (o) {
+        return (o['address'] != null) ? 'rtcp:%d %s IP%d %s' : 'rtcp:%d';
       }
     },
     {
@@ -102,10 +128,8 @@ var grammar = {
       'push': 'rtcpFb',
       'reg': r'^rtcp-fb:(\*|\d*) ([\w-_]*)(?: ([\w-_]*))?',
       'names': ['payload', 'type', 'subtype'],
-      'format':  (o) {
-        return (o.subtype != null)
-          ? 'rtcp-fb:%s %s %s'
-          : 'rtcp-fb:%s %s';
+      'format': (o) {
+        return (o['subtype'] != null) ? 'rtcp-fb:%s %s %s' : 'rtcp-fb:%s %s';
       }
     },
     {
@@ -114,8 +138,11 @@ var grammar = {
       'push': 'ext',
       'reg': r'^extmap:(\d+)(?:\/(\w+))? (\S*)(?: (\S*))?',
       'names': ['value', 'direction', 'uri', 'config'],
-      'format':  (o) {
-        return 'extmap:%d' + (o.direction ? '/%s' : '%v') + ' %s' + (o.config ? ' %s' : '');
+      'format': (o) {
+        return 'extmap:%d' +
+            (o['direction'] != null ? '/%s' : '%v') +
+            ' %s' +
+            (o['config'] != null ? ' %s' : '');
       }
     },
     {
@@ -123,10 +150,10 @@ var grammar = {
       'push': 'crypto',
       'reg': r'^crypto:(\d*) ([\w_]*) (\S*)(?: (\S*))?',
       'names': ['id', 'suite', 'config', 'sessionConfig'],
-      'format':  (o) {
-        return (o.sessionConfig != null)
-          ? 'crypto:%d %s %s %s'
-          : 'crypto:%d %s %s';
+      'format': (o) {
+        return (o['sessionConfig'] != null)
+            ? 'crypto:%d %s %s %s'
+            : 'crypto:%d %s %s';
       }
     },
     {
@@ -194,18 +221,33 @@ var grammar = {
       // a=candidate:3289912957 2 udp 1845501695 193.84.77.194 60017 typ srflx raddr 192.168.34.75 rport 60017 generation 0 network-id 3 network-cost 10
       // a=candidate:229815620 1 tcp 1518280447 192.168.150.19 60017 typ host tcptype active generation 0 network-id 3 network-cost 10
       // a=candidate:3289912957 2 tcp 1845501695 193.84.77.194 60017 typ srflx raddr 192.168.34.75 rport 60017 tcptype passive generation 0 network-id 3 network-cost 10
-      'push':'candidates',
-      'reg': r'^candidate:(\S*) (\d*) (\S*) (\d*) (\S*) (\d*) typ (\S*)(?: raddr (\S*) rport (\d*))?(?: tcptype (\S*))?(?: generation (\d*))?(?: network-id (\d*))?(?: network-cost (\d*))?',
-      'names': ['foundation', 'component', 'transport', 'priority', 'ip', 'port', 'type', 'raddr', 'rport', 'tcptype', 'generation', 'network-id', 'network-cost'],
-      'format':  (o) {
+      'push': 'candidates',
+      'reg':
+          r'^candidate:(\S*) (\d*) (\S*) (\d*) (\S*) (\d*) typ (\S*)(?: raddr (\S*) rport (\d*))?(?: tcptype (\S*))?(?: generation (\d*))?(?: network-id (\d*))?(?: network-cost (\d*))?',
+      'names': [
+        'foundation',
+        'component',
+        'transport',
+        'priority',
+        'ip',
+        'port',
+        'type',
+        'raddr',
+        'rport',
+        'tcptype',
+        'generation',
+        'network-id',
+        'network-cost'
+      ],
+      'format': (o) {
         var str = 'candidate:%s %d %s %d %s %d typ %s';
 
-        str += (o.raddr != null) ? ' raddr %s rport %d' : '%v%v';
+        str += (o['raddr'] != null) ? ' raddr %s rport %d' : '%v%v';
 
         // NB: candidate has three optional chunks, so %void middles one if it's missing
-        str += (o.tcptype != null) ? ' tcptype %s' : '%v';
+        str += (o['tcptype'] != null) ? ' tcptype %s' : '%v';
 
-        if (o.generation != null) {
+        if (o['generation'] != null) {
           str += ' generation %d';
         }
 
@@ -236,11 +278,11 @@ var grammar = {
       'push': 'ssrcs',
       'reg': r'^ssrc:(\d*) ([\w_-]*)(?::(.*))?',
       'names': ['id', 'attribute', 'value'],
-      'format':  (o) {
+      'format': (o) {
         var str = 'ssrc:%d';
-        if (o.attribute != null) {
+        if (o['attribute'] != null) {
           str += ' %s';
-          if (o.value != null) {
+          if (o['value'] != null) {
             str += ':%s';
           }
         }
@@ -252,7 +294,8 @@ var grammar = {
       // a=ssrc-group:FEC-FR 3004364195 1080772241
       'push': 'ssrcGroups',
       // token-char = %x21 / %x23-27 / %x2A-2B / %x2D-2E / %x30-39 / %x41-5A / %x5E-7E
-      'reg': r'^ssrc-group:([\x21\x23\x24\x25\x26\x27\x2A\x2B\x2D\x2E\w]*) (.*)',
+      'reg':
+          r'^ssrc-group:([\x21\x23\x24\x25\x26\x27\x2A\x2B\x2D\x2E\w]*) (.*)',
       'names': ['semantics', 'ssrcs'],
       'format': 'ssrc-group:%s %s'
     },
@@ -285,10 +328,10 @@ var grammar = {
       'name': 'sctpmap',
       'reg': r'^sctpmap:([\w_/]*) (\S*)(?: (\S*))?',
       'names': ['sctpmapNumber', 'app', 'maxMessageSize'],
-      'format':  (o) {
-        return (o.maxMessageSize != null)
-          ? 'sctpmap:%s %s %s'
-          : 'sctpmap:%s %s';
+      'format': (o) {
+        return (o['maxMessageSize'] != null)
+            ? 'sctpmap:%s %s %s'
+            : 'sctpmap:%s %s';
       }
     },
     {
@@ -302,8 +345,8 @@ var grammar = {
       'push': 'rids',
       'reg': r'^rid:([\d\w]+) (\w+)(?: ([\S| ]*))?',
       'names': ['id', 'direction', 'params'],
-      'format':  (o) {
-        return (o.params) ? 'rid:%s %s %s' : 'rid:%s %s';
+      'format': (o) {
+        return (o['params'] != null) ? 'rid:%s %s %s' : 'rid:%s %s';
       }
     },
     {
@@ -312,16 +355,15 @@ var grammar = {
       // a=imageattr:100 recv [x=320,y=240]
       'push': 'imageattrs',
       'reg': new RegExp(
-        // a=imageattr:97
-        '^imageattr:(\\d+|\\*)' +
-        // send [x=800,y=640,sar=1.1,q=0.6] [x=480,y=320]
-        '[\\s\\t]+(send|recv)[\\s\\t]+(\\*|\\[\\S+\\](?:[\\s\\t]+\\[\\S+\\])*)' +
-        // recv [x=330,y=250]
-        '(?:[\\s\\t]+(recv|send)[\\s\\t]+(\\*|\\[\\S+\\](?:[\\s\\t]+\\[\\S+\\])*))?'
-      ),
+          // a=imageattr:97
+          '^imageattr:(\\d+|\\*)' +
+              // send [x=800,y=640,sar=1.1,q=0.6] [x=480,y=320]
+              '[\\s\\t]+(send|recv)[\\s\\t]+(\\*|\\[\\S+\\](?:[\\s\\t]+\\[\\S+\\])*)' +
+              // recv [x=330,y=250]
+              '(?:[\\s\\t]+(recv|send)[\\s\\t]+(\\*|\\[\\S+\\](?:[\\s\\t]+\\[\\S+\\])*))?'),
       'names': ['pt', 'dir1', 'attrs1', 'dir2', 'attrs2'],
-      'format':  (o) {
-        return 'imageattr:%s %s %s' + (o.dir2 ? ' %s %s' : '');
+      'format': (o) {
+        return 'imageattr:%s %s %s' + (o['dir2'] != null ? ' %s %s' : '');
       }
     },
     {
@@ -329,18 +371,17 @@ var grammar = {
       // a=simulcast:recv 1;4,5 send 6;7
       'name': 'simulcast',
       'reg': new RegExp(
-        // a=simulcast:
-        '^simulcast:' +
-        // send 1,2,3;~4,~5
-        '(send|recv) ([a-zA-Z0-9\\-_~;,]+)' +
-        // space + recv 6;~7,~8
-        '(?:\\s?(send|recv) ([a-zA-Z0-9\\-_~;,]+))?' +
-        // end
-        '\$'
-      ),
+          // a=simulcast:
+          '^simulcast:' +
+              // send 1,2,3;~4,~5
+              '(send|recv) ([a-zA-Z0-9\\-_~;,]+)' +
+              // space + recv 6;~7,~8
+              '(?:\\s?(send|recv) ([a-zA-Z0-9\\-_~;,]+))?' +
+              // end
+              '\$'),
       'names': ['dir1', 'list1', 'dir2', 'list2'],
-      'format':  (o) {
-        return 'simulcast:%s %s' + (o.dir2 ? ' %s %s' : '');
+      'format': (o) {
+        return 'simulcast:%s %s' + (o['dir2'] != null ?' %s %s' : '');
       }
     },
     {
@@ -365,7 +406,13 @@ var grammar = {
       // a=source-filter: incl IN IP4 239.5.2.31 10.1.15.5
       'name': 'sourceFilter',
       'reg': r'^source-filter: *(excl|incl) (\S*) (IP4|IP6|\*) (\S*) (.*)',
-      'names': ['filterMode', 'netType', 'addressTypes', 'destAddress', 'srcList'],
+      'names': [
+        'filterMode',
+        'netType',
+        'addressTypes',
+        'destAddress',
+        'srcList'
+      ],
       'format': 'source-filter: %s %s %s %s %s'
     },
     {

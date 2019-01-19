@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'dart:convert';
-import '../lib/src/parser.dart';
+import 'package:dart_sdp_transform/sdp_transform.dart';
 
-main(List<String> arguments) {
+main() {
   new File('./test/ssrc.sdp').readAsString().then((String contents) {
-    print('sdp => ' + contents);
+    print('original sdp => ' + contents);
     var session = parse(contents);
-    print('json => ' + json.encode(session));
+    print('convert to json => ' + json.encode(session));
+    var sdp = write(session, null);
+    print('convert to sdp => ' + sdp);
   });
 }
