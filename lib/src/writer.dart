@@ -1,7 +1,6 @@
 import './grammar.dart' show grammar;
 
-// customized util.format - discards excess arguments and can void middle ones
-var formatRegExp = new RegExp(r'%d|%v|%s', caseSensitive: false);
+var formatRegExp = new RegExp(r'%d|%v|%s');
 
 format(formatStr, args) {
   var i = 0;
@@ -47,7 +46,6 @@ makeLine(type, obj, location) {
 }
 
 // RFC specified order
-// TODO: extend this with all the rest
 var defaultOuterOrder = [
   'v',
   'o',
@@ -67,7 +65,7 @@ var defaultOuterOrder = [
 var defaultInnerOrder = ['i', 'c', 'b', 'a'];
 
 write(session, opts) {
-  opts = opts != null ? opts : {'outerOrder': null, 'innerOrder': null};
+  opts = opts ?? {'outerOrder': null, 'innerOrder': null};
 
   // ensure certain properties exist
   if (session['version'] == null) {
@@ -83,10 +81,8 @@ write(session, opts) {
     }
   });
 
-  var outerOrder =
-      opts['outerOrder'] != null ? opts['souterOrder'] : defaultOuterOrder;
-  var innerOrder =
-      opts['innerOrder'] != null ? opts['innerOrder'] : defaultInnerOrder;
+  var outerOrder = opts['souterOrder'] ?? defaultOuterOrder;
+  var innerOrder = opts['innerOrder'] ?? defaultInnerOrder;
   var sdp = [];
 
   // loop through outerOrder for matching properties on session
