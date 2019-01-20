@@ -1,5 +1,5 @@
 name: sdp_transform
-version: 0.0.1
+version: 0.1.0
 author: cloudwebrtc <duanweiwei1982@gmail.com>
 description: Dart implementation of sdp-transform
 homepage: https://github.com/cloudwebrtc/dart-sdp-transform
