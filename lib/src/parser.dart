@@ -77,27 +77,22 @@ parse(sdp) {
   return session;
 }
 
-paramReducer(acc, expr) {
-  var s = expr.split(new RegExp(r'/=(.+)/'), 2);
-  if (s.length == 2) {
-    acc[s[0]] = toIntIfInt(s[1]);
-  } else if (s.length == 1 && expr.length > 1) {
-    acc[s[0]] = null;
-  }
-  return acc;
-}
-
 parseParams(str) {
-  return str.split(new RegExp(r'/;\s?/')).reduce(paramReducer, {});
+  Map<dynamic, dynamic> params = new Map();
+  str.split(new RegExp(r';')).forEach((line) {
+    List<String> kv = line.split(new RegExp(r'='));
+    params[kv[0]] = toIntIfInt(kv[1]);
+  });
+  return params;
 }
 
 parsePayloads(str) {
-  return str.split(' ').map();
+  return str.split(' ');
 }
 
 parseRemoteCandidates(str) {
   var candidates = [];
-  var parts = str.split(' ').map(toIntIfInt);
+  var parts = str.split(' ').forEach(toIntIfInt);
   for (var i = 0; i < parts.length; i += 3) {
     candidates
         .add({'component': parts[i], 'ip': parts[i + 1], 'port': parts[i + 2]});
@@ -106,26 +101,33 @@ parseRemoteCandidates(str) {
 }
 
 parseImageAttributes(str) {
-  return str.split(' ').map((item) {
-    return item
-        .substring(1, item.length - 1)
-        .split(',')
-        .reduce(paramReducer, {});
+  var attributes = [];
+  str.split(' ').forEach((item) {
+    Map<dynamic, dynamic> params = new Map();
+    item.substring(1, item.length - 1).split(',').forEach((attr) {
+      List<String> kv = attr.split(new RegExp(r'='));
+      params[kv[0]] = toIntIfInt(kv[1]);
+    });
+    attributes.add(params);
   });
+  return attributes;
 }
 
 parseSimulcastStreamList(str) {
-  return str.split(';').map((stream) {
-    return stream.split(',').map((format) {
+  var attributes = [];
+  str.split(';').forEach((stream) {
+    var scids = [];
+     stream.split(',').forEach((format) {
       var scid, paused = false;
-
       if (format[0] != '~') {
         scid = toIntIfInt(format);
       } else {
         scid = toIntIfInt(format.substring(1, format.length));
         paused = true;
       }
-      return {scid: scid, paused: paused};
+       scids.add({"scid": scid, "paused": paused});
     });
+    attributes.add(scids);
   });
+  return attributes;
 }
