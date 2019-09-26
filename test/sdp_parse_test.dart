@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:sdp_transform/sdp_transform.dart';
+import '../lib/sdp_transform.dart';
 
 main() {
   new File('./test/ssrc.sdp').readAsString().then((String contents) {

@@ -1,10 +1,11 @@
 import './grammar.dart' show grammar;
+import 'dart:convert';
 
 toIntIfInt(v) {
   return v != null ? int.tryParse(v) != null ? int.parse(v) : v : null;
 }
 
-attachProperties(match, location, names, rawName) {
+attachProperties(Iterable<RegExpMatch> match, Map location, names, rawName) {
   if ((rawName != null && rawName.length > 0) &&
       (names == null || names.length == 0)) {
     match.forEach((m) {
@@ -42,15 +43,16 @@ parseReg(obj, location, content) {
   }
 }
 
-parse(sdp) {
+parse(String sdp) {
   var session = {};
   var medias = [];
 
   var location =
       session; // points at where properties go under (one of the above)
 
+  print(sdp);
   // parse lines we understand
-  sdp.split(new RegExp(r"\r|\r\n|\n")).forEach((l) {
+  LineSplitter().convert(sdp).forEach((l) {
     if (l != '') {
       var type = l[0];
       var content = l.substring(2);
@@ -67,7 +69,12 @@ parse(sdp) {
           location[obj['name']] = content;
           continue;
         }
-        if (RegExp(obj['reg']).hasMatch(content)) {
+        
+        if (obj['reg'] is RegExp) {
+          if ((obj['reg'] as RegExp).hasMatch(content)) {
+            return parseReg(obj, location, content);
+          }
+        } else if (RegExp(obj['reg']).hasMatch(content)) {
           return parseReg(obj, location, content);
         }
       }
@@ -79,8 +86,8 @@ parse(sdp) {
 
 parseParams(str) {
   Map<dynamic, dynamic> params = new Map();
-  str.split(new RegExp(r';')).forEach((line) {
-    List<String> kv = line.split(new RegExp(r'='));
+  str.split(new RegExp(r';').pattern).forEach((line) {
+    List<String> kv = line.split(new RegExp(r'=').pattern);
     params[kv[0]] = toIntIfInt(kv[1]);
   });
   return params;
@@ -105,7 +112,7 @@ parseImageAttributes(str) {
   str.split(' ').forEach((item) {
     Map<dynamic, dynamic> params = new Map();
     item.substring(1, item.length - 1).split(',').forEach((attr) {
-      List<String> kv = attr.split(new RegExp(r'='));
+      List<String> kv = attr.split(new RegExp(r'=').pattern);
       params[kv[0]] = toIntIfInt(kv[1]);
     });
     attributes.add(params);
@@ -117,7 +124,7 @@ parseSimulcastStreamList(str) {
   var attributes = [];
   str.split(';').forEach((stream) {
     var scids = [];
-     stream.split(',').forEach((format) {
+    stream.split(',').forEach((format) {
       var scid, paused = false;
       if (format[0] != '~') {
         scid = toIntIfInt(format);
@@ -125,7 +132,7 @@ parseSimulcastStreamList(str) {
         scid = toIntIfInt(format.substring(1, format.length));
         paused = true;
       }
-       scids.add({"scid": scid, "paused": paused});
+      scids.add({"scid": scid, "paused": paused});
     });
     attributes.add(scids);
   });
