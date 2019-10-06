@@ -63,7 +63,7 @@ var defaultOuterOrder = [
 
 var defaultInnerOrder = ['i', 'c', 'b', 'a'];
 
-write(session, opts) {
+String write(Map<String, dynamic> session, Map<String, dynamic> opts) {
   opts = opts ?? {'outerOrder': null, 'innerOrder': null};
 
   // ensure certain properties exist
