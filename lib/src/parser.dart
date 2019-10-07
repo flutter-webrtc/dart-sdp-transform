@@ -1,7 +1,7 @@
 import './grammar.dart' show grammar;
 import 'dart:convert';
 
-int toIntIfInt(v) {
+dynamic toIntIfInt(v) {
   return v != null ? int.tryParse(v) != null ? int.parse(v) : v : null;
 }
 
