@@ -1,11 +1,12 @@
 import './grammar.dart' show grammar;
 import 'dart:convert';
 
-toIntIfInt(v) {
+dynamic toIntIfInt(v) {
   return v != null ? int.tryParse(v) != null ? int.parse(v) : v : null;
 }
 
-attachProperties(Iterable<RegExpMatch> match, Map location, names, rawName) {
+void attachProperties(
+    Iterable<RegExpMatch> match, Map location, names, rawName) {
   if ((rawName != null && rawName.length > 0) &&
       (names == null || names.length == 0)) {
     match.forEach((m) {
@@ -20,7 +21,7 @@ attachProperties(Iterable<RegExpMatch> match, Map location, names, rawName) {
   }
 }
 
-parseReg(obj, location, content) {
+void parseReg(obj, location, content) {
   var needsBlank = obj['name'] != null && obj['names'] != null;
   if (obj['push'] != null && location[obj['push']] == null) {
     location[obj['push']] = [];
@@ -43,7 +44,7 @@ parseReg(obj, location, content) {
   }
 }
 
-parse(String sdp) {
+Map<dynamic, dynamic> parse(String sdp) {
   var session = {};
   var medias = [];
 
@@ -69,13 +70,15 @@ parse(String sdp) {
           location[obj['name']] = content;
           continue;
         }
-        
+
         if (obj['reg'] is RegExp) {
           if ((obj['reg'] as RegExp).hasMatch(content)) {
-            return parseReg(obj, location, content);
+            parseReg(obj, location, content);
+            return;
           }
         } else if (RegExp(obj['reg']).hasMatch(content)) {
-          return parseReg(obj, location, content);
+          parseReg(obj, location, content);
+          return;
         }
       }
     }
@@ -84,7 +87,7 @@ parse(String sdp) {
   return session;
 }
 
-parseParams(str) {
+Map<dynamic, dynamic> parseParams(str) {
   Map<dynamic, dynamic> params = new Map();
   str.split(new RegExp(r';').pattern).forEach((line) {
     List<String> kv = line.split(new RegExp(r'=').pattern);
@@ -93,11 +96,11 @@ parseParams(str) {
   return params;
 }
 
-parsePayloads(str) {
+List<String> parsePayloads(str) {
   return str.split(' ');
 }
 
-parseRemoteCandidates(str) {
+List<String> parseRemoteCandidates(str) {
   var candidates = [];
   var parts = str.split(' ').forEach(toIntIfInt);
   for (var i = 0; i < parts.length; i += 3) {
@@ -107,7 +110,7 @@ parseRemoteCandidates(str) {
   return candidates;
 }
 
-parseImageAttributes(str) {
+List<String> parseImageAttributes(str) {
   var attributes = [];
   str.split(' ').forEach((item) {
     Map<dynamic, dynamic> params = new Map();
@@ -120,7 +123,7 @@ parseImageAttributes(str) {
   return attributes;
 }
 
-parseSimulcastStreamList(str) {
+List<String> parseSimulcastStreamList(str) {
   var attributes = [];
   str.split(';').forEach((stream) {
     var scids = [];
