@@ -5,8 +5,8 @@ dynamic toIntIfInt(v) {
   return v != null ? int.tryParse(v) != null ? int.parse(v) : v : null;
 }
 
-void attachProperties(
-    Iterable<RegExpMatch> match, Map location, names, rawName) {
+void attachProperties(Iterable<RegExpMatch> match,
+    Map<String, dynamic> location, names, rawName) {
   if ((rawName != null && rawName.length > 0) &&
       (names == null || names.length == 0)) {
     match.forEach((m) {
@@ -21,16 +21,17 @@ void attachProperties(
   }
 }
 
-void parseReg(obj, location, content) {
+void parseReg(
+    Map<String, dynamic> obj, Map<String, dynamic> location, String content) {
   var needsBlank = obj['name'] != null && obj['names'] != null;
   if (obj['push'] != null && location[obj['push']] == null) {
     location[obj['push']] = [];
   } else if (needsBlank && location[obj['name']] == null) {
-    location[obj['name']] = {};
+    location[obj['name']] = Map<String, dynamic>();
   }
 
   var keyLocation = obj['push'] != null
-      ? {}
+      ? Map<String, dynamic>()
       : // blank object that will be pushed
       needsBlank
           ? location[obj['name']]
@@ -58,7 +59,7 @@ Map<String, dynamic> parse(String sdp) {
       var type = l[0];
       var content = l.substring(2);
       if (type == 'm') {
-        Map<dynamic, dynamic> media = new Map();
+        Map<String, dynamic> media = new Map();
         media['rtp'] = [];
         media['fmtp'] = [];
         location = media; // point at latest media line
@@ -87,7 +88,7 @@ Map<String, dynamic> parse(String sdp) {
   return session;
 }
 
-Map<dynamic, dynamic> parseParams(str) {
+Map<dynamic, dynamic> parseParams(String str) {
   Map<dynamic, dynamic> params = new Map();
   str.split(new RegExp(r';').pattern).forEach((line) {
     List<String> kv = line.split(new RegExp(r'=').pattern);
@@ -100,9 +101,15 @@ List<String> parsePayloads(str) {
   return str.split(' ');
 }
 
-List<String> parseRemoteCandidates(str) {
+List<String> parseRemoteCandidates(String str) {
   var candidates = [];
-  var parts = str.split(' ').forEach(toIntIfInt);
+  List<String> parts = List();
+  str.split(' ').forEach((dynamic v) {
+    dynamic value = toIntIfInt(v);
+    if (value != null) {
+      parts.add(value);
+    }
+  });
   for (var i = 0; i < parts.length; i += 3) {
     candidates
         .add({'component': parts[i], 'ip': parts[i + 1], 'port': parts[i + 2]});
@@ -110,7 +117,7 @@ List<String> parseRemoteCandidates(str) {
   return candidates;
 }
 
-List<String> parseImageAttributes(str) {
+List<String> parseImageAttributes(String str) {
   var attributes = [];
   str.split(' ').forEach((item) {
     Map<dynamic, dynamic> params = new Map();
@@ -123,7 +130,7 @@ List<String> parseImageAttributes(str) {
   return attributes;
 }
 
-List<String> parseSimulcastStreamList(str) {
+List<String> parseSimulcastStreamList(String str) {
   var attributes = [];
   str.split(';').forEach((stream) {
     var scids = [];
