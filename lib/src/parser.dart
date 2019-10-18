@@ -45,7 +45,7 @@ void parseReg(obj, location, content) {
 }
 
 Map<String, dynamic> parse(String sdp) {
-  var session = Map<String, dynamic>();
+  Map<String, dynamic> session = Map<String, dynamic>();
   var medias = [];
 
   var location =
