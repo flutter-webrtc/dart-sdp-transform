@@ -1,6 +1,14 @@
 import 'dart:core';
+import "package:test/test.dart";
 
-basic_test() {
+void main() {
+  test("basictest", basictest);
+  test("basictest2", basictest2);
+  test("basictest3", basictest3);
+  test("basictest4", basictest4);
+}
+
+basictest() {
   RegExp exp = new RegExp(r"(\w+)");
   String str = "Parse my string";
   Iterable<Match> matches = exp.allMatches(str);
@@ -10,7 +18,7 @@ basic_test() {
   });
 }
 
-basic_test2() {
+basictest2() {
   RegExp exp = new RegExp(r'^(\S*) (\d*) (\d*) (\S*) IP(\d) (\S*)$');
   String str = "o=- 20518 0 IN IP4 203.0.113.1";
   Iterable<Match> matches = exp.allMatches(str);
@@ -21,7 +29,7 @@ basic_test2() {
   });
 }
 
-basic_test3() {
+basictest3() {
   RegExp exp = new RegExp(
       r'^a=candidate:(\S*) (\d*) (\S*) (\d*) (\S*) (\d*) typ (\S*)(?: raddr (\S*) rport (\d*))?(?: tcptype (\S*))?(?: generation (\d*))?(?: network-id (\d*))?(?: network-cost (\d*))?');
   String str =
@@ -55,7 +63,7 @@ basic_test3() {
   });
 }
 
-basic_test4() {
+basictest4() {
   RegExp exp = new RegExp(
       r'^a=candidate:(\S*) (\d*) (\S*) (\d*) (\S*) (\d*) typ (\S*)(?: raddr (\S*) rport (\d*))?(?: tcptype (\S*))?(?: generation (\d*))?(?: network-id (\d*))?(?: network-cost (\d*))?');
   String str = "a=candidate:0 1 UDP 2113667327 203.0.113.1 54400 typ host";
@@ -89,11 +97,4 @@ basic_test4() {
             ' = ' +
             m.group(i + 1));
   });
-}
-
-main() {
-  basic_test();
-  basic_test2();
-  basic_test3();
-  basic_test4();
 }
