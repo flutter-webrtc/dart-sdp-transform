@@ -390,7 +390,7 @@ var grammar = {
       // a=simulcast: recv pt=97;98 send pt=97
       // a=simulcast: send rid=5;6;7 paused=6,7
       'name': 'simulcast_03',
-      'reg': r'^simulcast:[\s\t]+([\S+\s\t]+)\$',
+      'reg': r'^simulcast:[\s\t]+([\S+\s\t]+)$',
       'names': ['value'],
       'format': 'simulcast: %s'
     },
@@ -398,7 +398,7 @@ var grammar = {
       // a=framerate:25
       // a=framerate:29.97
       'name': 'framerate',
-      'reg': r'^framerate:(\d+(?:\$|\.\d+))',
+      'reg': r'^framerate:(\d+(?:$|\.\d+))',
       'format': 'framerate:%s'
     },
     {
@@ -430,14 +430,14 @@ var grammar = {
       // RFC version 26 for SCTP over DTLS
       // https://tools.ietf.org/html/draft-ietf-mmusic-sctp-sdp-26#section-5
       'name': 'sctpPort',
-      'reg': r'^sctp-port:(\d+)\$',
+      'reg': r'^sctp-port:(\d+)$',
       'format': 'sctp-port:%s'
     },
     {
       // RFC version 26 for SCTP over DTLS
       // https://tools.ietf.org/html/draft-ietf-mmusic-sctp-sdp-26#section-6
       'name': 'maxMessageSize',
-      'reg': r'^max-message-size:(\d+)\$',
+      'reg': r'^max-message-size:(\d+)$',
       'format': 'max-message-size:%s'
     },
     {
