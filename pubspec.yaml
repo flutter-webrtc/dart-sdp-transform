@@ -1,7 +1,13 @@
 name: sdp_transform
 version: 0.1.0
-author: cloudwebrtc <duanweiwei1982@gmail.com>
+authors: 
+- cloudwebrtc <duanweiwei1982@gmail.com>
+- rlsutton1 <rlustton1@optusnet.com.au>
+- https://github.com/clux/sdp-transform
 description: Dart implementation of sdp-transform
 homepage: https://github.com/cloudwebrtc/dart-sdp-transform
 environment:
   sdk: '<3.0.0'
+
+dev_dependencies:
+  test: ^1.9.3
