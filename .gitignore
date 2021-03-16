@@ -5,3 +5,4 @@ build/app.dill
 .dart_tool/pub/bin/test/test.dart.snapshot.dart2
 .packages
 pubspec.lock
+.dart_tool
