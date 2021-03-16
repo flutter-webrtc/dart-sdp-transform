@@ -1,5 +1,5 @@
 # sdp-transform
-[![pub package](https://img.shields.io/pub/v/sdp_transform.svg)](https://pub.dartlang.org/packages/sdp_transform) [![Join the chat at https://gitter.im/flutter-webrtc/Lobby](https://badges.gitter.im/flutter-webrtc/Lobby.svg)](https://gitter.im/flutter-webrtc/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![pub package](https://img.shields.io/pub/v/sdp_transform.svg)](https://pub.dartlang.org/packages/sdp_transform) [![Gitter](https://badges.gitter.im/flutter-webrtc/Lobby.svg)](https://gitter.im/flutter-webrtc/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Dart version of the [sdp-transform](https://github.com/clux/sdp-transform) JavaScript library.
 
