@@ -1,6 +1,6 @@
 import 'dart:core';
 
-var grammar = {
+var grammar = <String, dynamic>{
   'v': [
     {'name': 'version', 'reg': r'^\d$'}
   ],
@@ -90,8 +90,10 @@ var grammar = {
       'format': (o) {
         return (o['encoding'] != null)
             ? 'rtpmap:%d %s/%s/%s'
-            : (o['rate'] != null) ? 'rtpmap:%d %s/%s' : 'rtpmap:%d %s';
-      }
+            : (o['rate'] != null)
+                ? 'rtpmap:%d %s/%s'
+                : 'rtpmap:%d %s' ;
+      }as dynamic
     },
     {
       // a=fmtp:108 profile-level-id=24;object=23;bitrate=64000
@@ -114,7 +116,7 @@ var grammar = {
       'names': ['port', 'netType', 'ipVer', 'address'],
       'format': (o) {
         return (o['address'] != null) ? 'rtcp:%d %s IP%d %s' : 'rtcp:%d';
-      }
+      } as dynamic
     },
     {
       // a=rtcp-fb:98 trr-int 100
@@ -130,7 +132,7 @@ var grammar = {
       'names': ['payload', 'type', 'subtype'],
       'format': (o) {
         return (o['subtype'] != null) ? 'rtcp-fb:%s %s %s' : 'rtcp-fb:%s %s';
-      }
+      }as dynamic
     },
     {
       // a=extmap:2 urn:ietf:params:rtp-hdrext:toffset
@@ -143,7 +145,7 @@ var grammar = {
             (o['direction'] != null ? '/%s' : '%v') +
             ' %s' +
             (o['config'] != null ? ' %s' : '');
-      }
+      }as dynamic
     },
     {
       // a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:PS1uQCVeeCFCanVmcjkpPywjNWhcYD0mXXtxaVBR|2^20|1:32
@@ -154,7 +156,7 @@ var grammar = {
         return (o['sessionConfig'] != null)
             ? 'crypto:%d %s %s %s'
             : 'crypto:%d %s %s';
-      }
+      }as dynamic
     },
     {
       // a=setup:actpass
@@ -254,7 +256,7 @@ var grammar = {
         str += (o['network-id'] != null) ? ' network-id %d' : '%v';
         str += (o['network-cost'] != null) ? ' network-cost %d' : '%v';
         return str;
-      }
+      }as dynamic
     },
     {
       // a=end-of-candidates (keep after the candidates line for readability)
@@ -286,8 +288,8 @@ var grammar = {
             str += ':%s';
           }
         }
-        return str;
-      }
+        return str ;
+      } as dynamic
     },
     {
       // a=ssrc-group:FEC 1 2
@@ -332,7 +334,7 @@ var grammar = {
         return (o['maxMessageSize'] != null)
             ? 'sctpmap:%s %s %s'
             : 'sctpmap:%s %s';
-      }
+      }as dynamic
     },
     {
       // a=x-google-flag:conference
@@ -347,7 +349,7 @@ var grammar = {
       'names': ['id', 'direction', 'params'],
       'format': (o) {
         return (o['params'] != null) ? 'rid:%s %s %s' : 'rid:%s %s';
-      }
+      }as dynamic
     },
     {
       // a=imageattr:97 send [x=800,y=640,sar=1.1,q=0.6] [x=480,y=320] recv [x=330,y=250]
@@ -364,7 +366,7 @@ var grammar = {
       'names': ['pt', 'dir1', 'attrs1', 'dir2', 'attrs2'],
       'format': (o) {
         return 'imageattr:%s %s %s' + (o['dir2'] != null ? ' %s %s' : '');
-      }
+      }as dynamic
     },
     {
       // a=simulcast:send 1,2,3;~4,~5 recv 6;~7,~8
@@ -382,7 +384,7 @@ var grammar = {
       'names': ['dir1', 'list1', 'dir2', 'list2'],
       'format': (o) {
         return 'simulcast:%s %s' + (o['dir2'] != null ? ' %s %s' : '');
-      }
+      }as dynamic
     },
     {
       // old simulcast draft 03 (implemented by Firefox)
