@@ -1,8 +1,15 @@
 import './grammar.dart' show grammar;
 import 'dart:convert';
 
-dynamic toIntIfInt(v) {
-  return v != null ? int.tryParse(v) != null ? int.parse(v) : v : null;
+/// Tries to parse a String as an int.
+/// If the [value] isn't an int then [value] is returned.
+/// If [value] is a null then null is returned.
+dynamic toIntIfInt(String? value) {
+  return value != null
+      ? int.tryParse(value) != null
+          ? int.parse(value)
+          : value
+      : null;
 }
 
 void attachProperties(Iterable<RegExpMatch> match,
@@ -75,11 +82,11 @@ Map<String, dynamic> parse(String sdp) {
         medias.add(media);
       }
       if (grammar[type] != null) {
-        for (var j = 0; j < grammar[type].length; j += 1) {
-          var obj = grammar[type][j];
+        for (var j = 0; j < grammar[type]!.length; j += 1) {
+          var obj = grammar[type]![j];
           if (obj['reg'] == null) {
             if (obj['name'] != null) {
-              location[obj['name']] = content;
+              location[obj['name']! as String] = content;
             } else {
               print("trying to add null key");
             }
@@ -91,13 +98,13 @@ Map<String, dynamic> parse(String sdp) {
               parseReg(obj, location, content);
               return;
             }
-          } else if (RegExp(obj['reg']).hasMatch(content)) {
+          } else if (RegExp(obj['reg']! as String).hasMatch(content)) {
             parseReg(obj, location, content);
             return;
           }
         }
         if (location['invalid'] == null) {
-          location['invalid'] = List();
+          location['invalid'] = <Map<String, dynamic>>[];
         }
         Map tmp = createMap();
         tmp['value'] = content;
@@ -125,7 +132,7 @@ Map<dynamic, dynamic> parseParams(String str) {
       value = line.substring(idx + 1, line.length).trim();
     }
 
-    assert(key != null);
+    // assert(key != null);
     params[key] = toIntIfInt(value);
   });
   return params;
@@ -135,10 +142,11 @@ List<String> parsePayloads(str) {
   return str.split(' ');
 }
 
-List<String> parseRemoteCandidates(String str) {
+/// Returns a list that can contain ints, Strings.
+List<dynamic> parseRemoteCandidates(String str) {
   var candidates = [];
-  List<String> parts = List();
-  str.split(' ').forEach((dynamic v) {
+  List<dynamic> parts = <dynamic>[];
+  str.split(' ').forEach((String v) {
     dynamic value = toIntIfInt(v);
     if (value != null) {
       parts.add(value);
@@ -152,12 +160,12 @@ List<String> parseRemoteCandidates(String str) {
 }
 
 List<Map<String, dynamic>> parseImageAttributes(String str) {
-  List<Map<String, dynamic>> attributes = List();
+  var attributes = <Map<String, dynamic>>[];
   str.split(' ').forEach((item) {
     Map<String, dynamic> params = createMap();
     item.substring(1, item.length - 1).split(',').forEach((attr) {
       List<String> kv = attr.split(new RegExp(r'=').pattern);
-      assert(kv[0] != null);
+      assert(kv.length >= 2);
       params[kv[0]] = toIntIfInt(kv[1]);
     });
     attributes.add(params);
@@ -170,9 +178,9 @@ Map<String, dynamic> createMap() {
 }
 
 List<dynamic> parseSimulcastStreamList(String str) {
-  List<dynamic> attributes = List();
+  List<dynamic> attributes = <dynamic>[];
   str.split(';').forEach((stream) {
-    List scids = List();
+    List scids = <dynamic>[];
     stream.split(',').forEach((format) {
       var scid, paused = false;
       if (format[0] != '~') {

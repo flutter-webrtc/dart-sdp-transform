@@ -63,7 +63,7 @@ var defaultOuterOrder = [
 
 var defaultInnerOrder = ['i', 'c', 'b', 'a'];
 
-String write(Map<String, dynamic> session, Map<String, dynamic> opts) {
+String write(Map<String, dynamic> session, Map<String, dynamic>? opts) {
   opts = opts ?? {'outerOrder': null, 'innerOrder': null};
 
   // ensure certain properties exist
@@ -86,7 +86,7 @@ String write(Map<String, dynamic> session, Map<String, dynamic> opts) {
 
   // loop through outerOrder for matching properties on session
   outerOrder.forEach((type) {
-    grammar[type].forEach((obj) {
+    grammar[type]!.forEach((obj) {
       if (obj['name'] != null && session[obj['name']] != null) {
         sdp.add(makeLine(type, obj, session));
       } else if (obj['push'] != null && session[obj['push']] != null) {
@@ -99,9 +99,9 @@ String write(Map<String, dynamic> session, Map<String, dynamic> opts) {
 
   // then for each media line, follow the innerOrder
   session['media'].forEach((mLine) {
-    sdp.add(makeLine('m', grammar['m'][0], mLine));
+    sdp.add(makeLine('m', grammar['m']![0], mLine));
     innerOrder.forEach((type) {
-      grammar[type].forEach((obj) {
+      grammar[type]!.forEach((obj) {
         if (obj['name'] != null && mLine[obj['name']] != null) {
           sdp.add(makeLine(type, obj, mLine));
         } else if (obj['push'] != null && mLine[obj['push']] != null) {

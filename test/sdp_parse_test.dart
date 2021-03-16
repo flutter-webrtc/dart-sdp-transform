@@ -41,14 +41,14 @@ deepEqual(dynamic value, dynamic match, String message) {}
 
 _testAsterisk() async {
   String sdp =
-      await new File('./tests/sdp_test_data/asterisk.sdp').readAsString();
+      await new File('./test/sdp_test_data/asterisk.sdp').readAsString();
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
 }
 
 _testNormalSdp() async {
   String sdp =
-      await new File('./tests/sdp_test_data/normal.sdp').readAsString();
+      await new File('./test/sdp_test_data/normal.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -205,7 +205,7 @@ _testNormalSdp() async {
  * ignore the name
  */
 _testHackySdp() async {
-  String sdp = await new File('./tests/sdp_test_data/hacky.sdp').readAsString();
+  String sdp = await new File('./test/sdp_test_data/hacky.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -323,7 +323,7 @@ _testHackySdp() async {
 
 _testIceliteSdp() async {
   String sdp =
-      await new File('./tests/sdp_test_data/icelite.sdp').readAsString();
+      await new File('./test/sdp_test_data/icelite.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -336,7 +336,7 @@ _testIceliteSdp() async {
 
 _testInvalidSdp() async {
   String sdp =
-      await new File('./tests/sdp_test_data/invalid.sdp').readAsString();
+      await new File('./test/sdp_test_data/invalid.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -354,7 +354,7 @@ _testInvalidSdp() async {
 }
 
 _testJssipSdp() async {
-  String sdp = await new File('./tests/sdp_test_data/jssip.sdp').readAsString();
+  String sdp = await new File('./test/sdp_test_data/jssip.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -410,7 +410,7 @@ _testJssipSdp() async {
 }
 
 _testJsepSdp() async {
-  String sdp = await new File('./tests/sdp_test_data/jsep.sdp').readAsString();
+  String sdp = await new File('./test/sdp_test_data/jsep.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -441,7 +441,7 @@ _testJsepSdp() async {
 }
 
 _testAlacSdp() async {
-  String sdp = await new File('./tests/sdp_test_data/alac.sdp').readAsString();
+  String sdp = await new File('./test/sdp_test_data/alac.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -461,7 +461,7 @@ _testAlacSdp() async {
 }
 
 testOnvifSdp() async {
-  String sdp = await new File('./tests/sdp_test_data/onvif.sdp').readAsString();
+  String sdp = await new File('./test/sdp_test_data/onvif.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -500,7 +500,7 @@ testOnvifSdp() async {
 }
 
 _testSsrcSdp() async {
-  String sdp = await new File('./tests/sdp_test_data/ssrc.sdp').readAsString();
+  String sdp = await new File('./test/sdp_test_data/ssrc.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -519,7 +519,7 @@ _testSsrcSdp() async {
 
 _testSimulcastSdp() async {
   String sdp =
-      await new File('./tests/sdp_test_data/simulcast.sdp').readAsString();
+      await new File('./test/sdp_test_data/simulcast.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -716,7 +716,7 @@ _testSimulcastSdp() async {
 
 _testSt2202_6Sdp() async {
   String sdp =
-      await new File('./tests/sdp_test_data/st2022-6.sdp').readAsString();
+      await new File('./test/sdp_test_data/st2022-6.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -736,7 +736,7 @@ _testSt2202_6Sdp() async {
 
 _testSt2110_20Sdp() async {
   String sdp =
-      await new File('./tests/sdp_test_data/st2110-20.sdp').readAsString();
+      await new File('./test/sdp_test_data/st2110-20.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -774,7 +774,7 @@ _testSt2110_20Sdp() async {
 
 _testSctpDtls26Sdp() async {
   String sdp =
-      await new File('./tests/sdp_test_data/sctp-dtls-26.sdp').readAsString();
+      await new File('./test/sdp_test_data/sctp-dtls-26.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -806,7 +806,7 @@ _testSctpDtls26Sdp() async {
 
 _testExtmapEncryptSdp() async {
   String sdp =
-      await new File('./tests/sdp_test_data/extmap-encrypt.sdp').readAsString();
+      await new File('./test/sdp_test_data/extmap-encrypt.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -864,7 +864,7 @@ _testExtmapEncryptSdp() async {
 
 _testDanteAes67() async {
   String sdp =
-      await new File('./tests/sdp_test_data/dante-aes67.sdp').readAsString();
+      await new File('./test/sdp_test_data/dante-aes67.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -900,7 +900,7 @@ _testDanteAes67() async {
 
 _testTcpActive() async {
   String sdp =
-      await new File('./tests/sdp_test_data/tcp-active.sdp').readAsString();
+      await new File('./test/sdp_test_data/tcp-active.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -927,7 +927,7 @@ _testTcpActive() async {
 
 _testTcpPassive() async {
   String sdp =
-      await new File('./tests/sdp_test_data/tcp-passive.sdp').readAsString();
+      await new File('./test/sdp_test_data/tcp-passive.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
