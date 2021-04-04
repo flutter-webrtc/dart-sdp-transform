@@ -12,8 +12,8 @@ basictest() {
   RegExp exp = new RegExp(r"(\w+)");
   String str = "Parse my string";
   Iterable<Match> matches = exp.allMatches(str);
-  matches.forEach((m) {
-    String match = m.group(0);
+  matches.forEach((Match m) {
+    String match = m.group(0)!;
     print('value = ' + match);
   });
 }
@@ -22,10 +22,10 @@ basictest2() {
   RegExp exp = new RegExp(r'^(\S*) (\d*) (\d*) (\S*) IP(\d) (\S*)$');
   String str = "o=- 20518 0 IN IP4 203.0.113.1";
   Iterable<Match> matches = exp.allMatches(str);
-  matches.forEach((m) {
-    print('group(0) = ' + m.group(0));
+  matches.forEach((Match m) {
+    print('group(0) = ' + m.group(0)!);
     for (var i = 0; i < m.groupCount; i++)
-      print('group(' + (1 + i).toString() + ') = ' + m.group(i + 1));
+      print('group(' + (1 + i).toString() + ') = ' + m.group(i + 1)!);
   });
 }
 
@@ -50,8 +50,8 @@ basictest3() {
     'network-cost'
   ];
   Iterable<Match> matches = exp.allMatches(str);
-  matches.forEach((m) {
-    print('group(0) = ' + m.group(0));
+  matches.forEach((Match m) {
+    print('group(0) = ' + m.group(0)!);
     for (var i = 0; i < m.groupCount; i++)
       if (m.group(i + 1) != null)
         print('group(' +
@@ -59,7 +59,7 @@ basictest3() {
             ') ' +
             names[i] +
             ' = ' +
-            m.group(i + 1));
+            m.group(i + 1)!);
   });
 }
 
@@ -83,9 +83,9 @@ basictest4() {
     'network-cost'
   ];
   Iterable<Match> matches = exp.allMatches(str);
-  matches.forEach((m) {
+  matches.forEach((Match m) {
     print('group(0) = ' +
-        m.group(0) +
+        m.group(0)! +
         ", groupCount = " +
         m.groupCount.toString());
     for (var i = 0; i < m.groupCount; i++)
@@ -95,6 +95,6 @@ basictest4() {
             ') ' +
             names[i] +
             ' = ' +
-            m.group(i + 1));
+            m.group(i + 1)!);
   });
 }
