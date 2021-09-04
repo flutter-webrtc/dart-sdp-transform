@@ -65,7 +65,6 @@ Map<String, dynamic> parse(String sdp) {
   var location =
       session; // points at where properties go under (one of the above)
 
-  print(sdp);
   // parse lines we understand
   LineSplitter().convert(sdp).forEach((l) {
     if (l != '') {
