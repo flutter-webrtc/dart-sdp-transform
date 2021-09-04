@@ -2,7 +2,7 @@ import 'dart:core';
 
 var grammar = {
   'v': [
-    {'name': 'version', 'reg': r'^\d$'}
+    {'name': 'version', 'reg': r'^(\d*)'}
   ],
   'o': [
     {
@@ -23,7 +23,7 @@ var grammar = {
   ],
   // default parsing of these only (though some of these feel outdated)
   's': [
-    {'name': 'name'}
+    {'name': 'name', 'reg': r'^(\S*)'}
   ],
   'i': [
     {'name': 'description'}
@@ -90,7 +90,9 @@ var grammar = {
       'format': (o) {
         return (o['encoding'] != null)
             ? 'rtpmap:%d %s/%s/%s'
-            : (o['rate'] != null) ? 'rtpmap:%d %s/%s' : 'rtpmap:%d %s';
+            : (o['rate'] != null)
+                ? 'rtpmap:%d %s/%s'
+                : 'rtpmap:%d %s';
       } as dynamic
     },
     {
@@ -144,6 +146,12 @@ var grammar = {
             ' %s' +
             (o['config'] != null ? ' %s' : '');
       } as dynamic
+    },
+    {
+      // a=extmap-allow-mixed
+      'name': 'extmap-allow-mixed',
+      'push': 'extmapAllowMixed',
+      'reg': r'^extmap-allow-mixed',
     },
     {
       // a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:PS1uQCVeeCFCanVmcjkpPywjNWhcYD0mXXtxaVBR|2^20|1:32
@@ -302,14 +310,14 @@ var grammar = {
     {
       // a=msid-semantic: WMS Jvlam5X3SX1OP6pn20zWogvaKJz5Hjf9OnlV
       'name': 'msidSemantic',
-      'reg': r'^msid-semantic:\s?(\w*) (\S*)',
+      'reg': r'^msid-semantic:\s?(\w*) ?(\S*)',
       'names': ['semantic', 'token'],
       'format': 'msid-semantic: %s %s' // space after ':' is not accidental
     },
     {
       // a=group:BUNDLE audio video
       'push': 'groups',
-      'reg': r'^group:(\w*) (.*)',
+      'reg': r'^group:(\w*) ?(.*)',
       'names': ['type', 'mids'],
       'format': 'group:%s %s'
     },

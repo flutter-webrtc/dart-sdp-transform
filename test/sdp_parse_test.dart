@@ -47,8 +47,7 @@ _testAsterisk() async {
 }
 
 _testNormalSdp() async {
-  String sdp =
-      await new File('./test/sdp_test_data/normal.sdp').readAsString();
+  String sdp = await new File('./test/sdp_test_data/normal.sdp').readAsString();
 
   Map<String, dynamic> session = parse(sdp + '');
   ok(session, 'got session info');
@@ -86,8 +85,12 @@ _testNormalSdp() async {
       audio['ext'][1],
       {'value': 2, 'direction': 'recvonly', 'uri': 'URI-gps-string'},
       'audio extension 1');
-  //equal(audio['extmapAllowMixed'], 'extmap-allow-mixed',
-  //   'extmap-allow-mixed present');
+  deepEqual(
+      audio['extmapAllowMixed'],
+      [
+        {'extmap-allow-mixed': 'extmap-allow-mixed'}
+      ],
+      'extmap-allow-mixed');
 
   dynamic video = media[1];
   equal(video['type'], 'video', 'video type');

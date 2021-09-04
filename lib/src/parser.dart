@@ -2,7 +2,11 @@ import './grammar.dart' show grammar;
 import 'dart:convert';
 
 dynamic toIntIfInt(v) {
-  return v != null ? int.tryParse(v) != null ? int.parse(v) : v : null;
+  return v != null
+      ? int.tryParse(v) != null
+          ? int.parse(v)
+          : v
+      : null;
 }
 
 void attachProperties(Iterable<RegExpMatch> match,

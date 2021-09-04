@@ -20,7 +20,7 @@ makeLine(type, obj, location) {
     }
   } else {
     try {
-      str = location[obj['name']];
+      str = '${location[obj['name']]}';
     } catch (e) {
       print('e = ' + e.toString());
     }
