@@ -2,11 +2,14 @@ import './grammar.dart' show grammar;
 import 'dart:convert';
 
 dynamic toIntIfInt(v) {
-  return v != null
-      ? int.tryParse(v) != null
-          ? int.parse(v)
-          : v
-      : null;
+  if (v == null) return null;
+  final n = int.tryParse(v);
+  // Only coerce when the value round-trips losslessly, mirroring the original
+  // JavaScript sdp-transform (`String(Number(v)) === v ? Number(v) : v`).
+  // Without this guard, non-canonical numeric tokens (leading zeros, 0x/0X hex,
+  // leading +) silently lose characters - e.g. an ICE ufrag "0048" -> 48,
+  // "0X48" -> 72 - which can drop a ufrag below WebRTC's 4-char minimum.
+  return (n != null && n.toString() == v) ? n : v;
 }
 
 void attachProperties(Iterable<RegExpMatch> match,
