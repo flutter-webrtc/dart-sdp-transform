@@ -1,9 +1,17 @@
 name: sdp_transform
+description: >
+  Vendored fork of cloudwebrtc/dart-sdp-transform 0.3.2 — the published
+  pub.dev package declares `sdk: '>=2.12.0 <3.0.0'`, which blocks it from
+  resolving in a Dart 3 project even though the code itself works
+  unmodified. Forked as part of the mediasoup_client_flutter SFU port
+  (see CallMateAI's LESSONS.md) rather than depending on the stale
+  pub.dev version.
 version: 0.3.2
-description: Dart implementation of sdp-transform
 homepage: https://github.com/cloudwebrtc/dart-sdp-transform
+publish_to: 'none'
+
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dev_dependencies:
   test: ^1.9.3
