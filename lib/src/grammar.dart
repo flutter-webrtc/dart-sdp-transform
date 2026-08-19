@@ -171,6 +171,12 @@ var grammar = {
       'format': 'setup:%s'
     },
     {
+      // a=connection:new
+      'name': 'connectionType',
+      'reg': r'^connection:(new|existing)',
+      'format': 'connection:%s'
+    },
+    {
       // a=mid:1
       'name': 'mid',
       'reg': r'^mid:([^\s]*)',
