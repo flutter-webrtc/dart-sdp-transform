@@ -18,12 +18,16 @@ makeLine(type, obj, location) {
     } else {
       str = obj['format'];
     }
-  } else {
+  } else if (obj['name'] != null) {
     try {
       str = '${location[obj['name']]}';
     } catch (e) {
       print('e = ' + e.toString());
     }
+  } else if (obj['names'] != null && obj['names'].isNotEmpty) {
+    str = '${location[obj['names'][0]]}';
+  } else {
+    str = '';
   }
   var formatStr = type + '=' + str.toString();
   var args = [];

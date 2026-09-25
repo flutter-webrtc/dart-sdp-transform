@@ -354,6 +354,11 @@ _testInvalidSdp() async {
   equal(
       media[0]['invalid'].length, 1, 'found exactly 1 invalid line'); // f= lost
   equal(media[0]['invalid'][0]['value'], 'goo:hithere', 'copied verbatim');
+
+  dynamic rewritten = write(session, null);
+  ok(rewritten.indexOf('a=null') < 0, 'invalid line not corrupted to a=null');
+  ok(rewritten.indexOf('a=goo:hithere') >= 0,
+      'invalid line written back verbatim');
 }
 
 _testJssipSdp() async {
