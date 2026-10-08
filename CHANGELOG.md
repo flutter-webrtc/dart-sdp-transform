@@ -1,6 +1,13 @@
 # Changelog
 
 --------------------------------------------
+[0.4.0] - 2026.10.08
+
+* Fix writer emitting literal "a=null" for unrecognized a= lines
+* Added grammar for `a=connection:new`
+* fix: guard toIntIfInt against lossy numeric coercion
+* test: reproduce ICE ufrag numeric/hex coercion in parser
+
 [0.3.2] - 2021.09.04
 
 * Remove print in parse.
